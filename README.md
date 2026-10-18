@@ -1,1 +1,107 @@
-<p align="center"> <img src="https://vyapaarx.tech/assets/app_logo.png" alt="VyapaarX logo" width="150" /> </p> <p align="center"> <strong>Explore markets. Practise the workflow. Keep orders virtual.</strong><br /> A market-learning and paper-trading workspace for Indian equity and F&amp;O workflows. </p> <p align="center"> <a href="https://vyapaarx.tech"><img src="https://img.shields.io/badge/Website-vyapaarx.tech-22d3ee?style=for-the-badge&logo=googlechrome&logoColor=white" alt="VyapaarX website" /></a> <img src="https://img.shields.io/badge/Flutter-mobile%20app-3b82f6?style=for-the-badge&logo=flutter&logoColor=white" alt="Flutter mobile app" /> <img src="https://img.shields.io/badge/TypeScript-backend-3178c6?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript backend" /> </p> <p align="center"> <img src="https://vyapaarx.tech/assets/showcase_mobile_ecosystem.png" alt="VyapaarX web and mobile product overview" width="100%" /> </p> <p align="center"><sub>Illustrative product artwork. Market data appears only when an authorized source is configured and validation checks pass.</sub></p> --- ## What is VyapaarX? VyapaarX is a market-learning product for exploring Indian equity and F&amp;O workflows. It brings market views, options analytics and simulated trading tools into a web and mobile experience. Paper orders and portfolio balances are virtual. They are not sent to a broker or exchange. Data and features depend on the market session, plan, configured data sources and freshness checks; stale or unavailable data may be hidden. ## Explore the workspace | 📊 Market views | 🧮 Options analytics | 🧪 Paper trading | 📝 Review and learn | |---|---|---|---| | Dashboard, charts and market snapshots when verified data is available. | Option-chain, open interest, volatility and Greeks views when supported by available inputs. | Practise order workflows with simulated orders and a virtual portfolio. | Use journaling and risk-review tools to study hypothetical scenarios. | <p align="center"> <img src="https://vyapaarx.tech/assets/screens/01_dashboard.png" alt="VyapaarX mobile dashboard preview" width="31%" /> &nbsp; <img src="https://vyapaarx.tech/assets/screens/02_option_chain.png" alt="VyapaarX option-chain preview" width="31%" /> &nbsp; <img src="https://vyapaarx.tech/assets/screens/04_positions.png" alt="VyapaarX order workflow preview" width="31%" /> </p> <p align="center"><sub>Illustrative interface previews; values in screenshots are not a live market feed.</sub></p> ## Data integrity by design ```mermaid flowchart LR A[Authorized market sources] --> B[Backend validation and freshness checks] B -->|Available and valid| C[Market views and derived analytics] B -->|Unavailable or stale| D[Unavailable state] C --> E[Learning workspace] E --> F[Simulated orders and virtual portfolio] ``` | Label | Meaning | |---|---| | **REAL** | Market data received from a configured upstream source. | | **DERIVED** | Analytics calculated from available market inputs. | | **SIMULATED** | Paper orders, virtual balances, fills and portfolio activity. | | **UNAVAILABLE** | Data is withheld when a source is missing, stale or fails validation. | VyapaarX does not present fabricated prices as live data. Simulated fills and costs can differ from live execution; simulated performance does not predict results. ## Product architecture ```mermaid flowchart TB Web[Web experience] --> API[Fastify and TypeScript API] Mobile[Flutter app] --> API API --> Sources[Configured market-data sources] API --> DB[(PostgreSQL)] API --> Cache[(Redis)] Cache --> Stream[Realtime delivery when available] Stream --> Web Stream --> Mobile ``` | Area | Main technologies | |---|---| | Web | HTML, CSS and TypeScript/JavaScript | | Mobile | Flutter and Dart | | Backend | Node.js, TypeScript, Fastify, Prisma | | Persistence and messaging | PostgreSQL and Redis | | Market-data transport | WebSockets and provider adapters, subject to configuration and authorization | ## Repository map ```text VyapaarX/ ├── backend/       Fastify API, domain services and Prisma schema ├── web/           Website and browser experience ├── flutter_app/   Flutter mobile application ├── docs/          Product, engineering and RFC documentation ├── ops/           Local operations and infrastructure notes └── docker-compose.yml  Local PostgreSQL, Redis and backend services ``` ## Getting started ### Requirements - Node.js and npm - Flutter SDK for the mobile app - Docker Compose for the local PostgreSQL and Redis services - Local environment configuration for the backend (see [`backend/.env.example`](backend/.env.example) and [`.env.example`](.env.example)) Never commit `.env` files, broker credentials, access tokens or other secrets. ### Backend Configure the local environment files first, then start the local services and API: ```bash docker compose up -d postgres redis npm ci npm --prefix backend ci npm run dev ``` The backend requires its configured database and Redis connections. Market-data features additionally depend on authorized provider credentials and available feeds. ### Mobile app ```bash cd flutter_app flutter pub get flutter run ``` For deployment and operating notes, see [`ops/README.md`](ops/README.md). For architecture and product decisions, see [`docs/`](docs/). ## Responsible use - VyapaarX is for education and market-workflow practice; it is not investment advice. - Paper orders are simulated and are not routed to a broker or exchange. - Virtual balances have no cash value and cannot be withdrawn. - Market data can be delayed, stale or unavailable, depending on authorized sources and validation. - Analytics and hypothetical scenarios do not guarantee outcomes or profits. ## Learn more - 🌐 [Open vyapaarx.tech](https://vyapaarx.tech) - 🧭 [Website overview](web/index.html) - 🛠️ [Operations guide](ops/README.md) - 📚 [Project documentation](docs/) <p align="center"><strong>VyapaarX · Trade smarter. Analyse clearly. Learn by practising.</strong></p>
+<p align="center">
+  <img src="https://vyapaarx.tech/assets/app_logo.png" alt="VyapaarX logo" width="150" />
+</p>
+
+<h1 align="center">VyapaarX</h1>
+
+<p align="center">
+  <strong>Explore markets. Practise the workflow. Keep orders virtual.</strong><br />
+  A market-learning and paper-trading workspace for Indian equity and F&amp;O workflows.
+</p>
+
+<p align="center">
+  <a href="https://vyapaarx.tech"><img src="https://img.shields.io/badge/Website-vyapaarx.tech-22d3ee?style=for-the-badge&logo=googlechrome&logoColor=white" alt="VyapaarX website" /></a>
+  <img src="https://img.shields.io/badge/Flutter-mobile%20app-3b82f6?style=for-the-badge&logo=flutter&logoColor=white" alt="Flutter mobile app" />
+  <img src="https://img.shields.io/badge/TypeScript-backend-3178c6?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript backend" />
+</p>
+
+<p align="center">
+  <img src="./docs/marketing/vyapaarx-product-tour.gif" alt="Animated VyapaarX product tour: dashboard, options, virtual positions, scalper terminal and discipline review" width="100%" />
+</p>
+
+<p align="center"><sub>Animated product tour. Screenshots are illustrative; values are not a live market feed.</sub></p>
+
+---
+
+## What is VyapaarX?
+
+VyapaarX is a market-learning product for exploring Indian equity and F&amp;O workflows. It brings market views, options analytics and simulated trading tools into a web and mobile experience.
+
+Paper orders and portfolio balances are virtual. They are not sent to a broker or exchange. Data and features depend on the market session, plan, configured data sources and freshness checks; stale or unavailable data may be hidden.
+
+## Explore the workspace
+
+| 📊 Market views | 🧮 Options analytics | 🧪 Paper trading | 📝 Review and learn |
+|---|---|---|---|
+| Dashboard, charts and market snapshots when verified data is available. | Option-chain, open interest, volatility and Greeks views when supported by available inputs. | Practise order workflows with simulated orders and a virtual portfolio. | Use journaling and risk-review tools to study hypothetical scenarios. |
+
+<p align="center">
+  <img src="https://vyapaarx.tech/assets/screens/01_dashboard.png" alt="VyapaarX mobile dashboard preview" width="31%" />
+  &nbsp;
+  <img src="https://vyapaarx.tech/assets/screens/02_option_chain.png" alt="VyapaarX option-chain preview" width="31%" />
+  &nbsp;
+  <img src="https://vyapaarx.tech/assets/screens/04_positions.png" alt="VyapaarX virtual positions preview" width="31%" />
+</p>
+
+<p align="center"><sub>Illustrative interface previews; values in screenshots are not a live market feed.</sub></p>
+
+## Data integrity by design
+
+```mermaid
+flowchart LR
+    A[Authorized market sources] --> B[Backend validation and freshness checks]
+    B -->|Available and valid| C[Market views and derived analytics]
+    B -->|Unavailable or stale| D[Unavailable state]
+    C --> E[Learning workspace]
+    E --> F[Simulated orders and virtual portfolio]
+```
+
+| Label | Meaning |
+|---|---|
+| **REAL** | Market data received from a configured upstream source. |
+| **DERIVED** | Analytics calculated from available market inputs. |
+| **SIMULATED** | Paper orders, virtual balances, fills and portfolio activity. |
+| **UNAVAILABLE** | Data is withheld when a source is missing, stale or fails validation. |
+
+VyapaarX does not present fabricated prices as live data. Simulated fills and costs can differ from live execution; simulated performance does not predict results.
+
+## Product architecture
+
+```mermaid
+flowchart TB
+    Web[Web experience] --> API[Fastify and TypeScript API]
+    Mobile[Flutter app] --> API
+    API --> Sources[Configured market-data sources]
+    API --> DB[(PostgreSQL)]
+    API --> Cache[(Redis)]
+    Cache --> Stream[Realtime delivery when available]
+    Stream --> Web
+    Stream --> Mobile
+```
+
+| Area | Main technologies |
+|---|---|
+| Web | HTML, CSS and TypeScript/JavaScript |
+| Mobile | Flutter and Dart |
+| Backend | Node.js, TypeScript, Fastify, Prisma |
+| Persistence and messaging | PostgreSQL and Redis |
+| Market-data transport | WebSockets and provider adapters, subject to configuration and authorization |
+
+## Repository scope
+
+This repository currently contains the public-facing VyapaarX project overview. The application source code and local setup files are not included here.
+
+## Responsible use
+
+- VyapaarX is for education and market-workflow practice; it is not investment advice.
+- Paper orders are simulated and are not routed to a broker or exchange.
+- Virtual balances have no cash value and cannot be withdrawn.
+- Market data can be delayed, stale or unavailable, depending on authorized sources and validation.
+- Analytics and hypothetical scenarios do not guarantee outcomes or profits.
+
+## Learn more
+
+- 🌐 [Open vyapaarx.tech](https://vyapaarx.tech)
+
+<p align="center"><strong>VyapaarX · Trade smarter. Analyse clearly. Learn by practising.</strong></p>
+
